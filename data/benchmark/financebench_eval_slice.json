@@ -1,0 +1,162 @@
+[
+  {
+    "query_id": "FB-01",
+    "query": "What was the year-over-year revenue growth rate for Enterprise Cloud Infrastructure in Q3 2024?",
+    "category": "Segment Performance",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["cloud infrastructure", "revenue growth", "24.8%"],
+    "ground_truth_answer": "Enterprise Cloud Infrastructure grew 24.8% year-over-year in Q3 2024, reaching $1,840M compared to $1,474M in Q3 2023."
+  },
+  {
+    "query_id": "FB-02",
+    "query": "What was the total operating income reported in the Consolidated Income Statement for Q3 2024?",
+    "category": "Income Statement",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["operating income", "consolidated", "$742m"],
+    "ground_truth_answer": "Operating income was $742M in Q3 2024, representing an operating margin of 21.7%."
+  },
+  {
+    "query_id": "FB-03",
+    "query": "How much cash and cash equivalents did the company hold at the end of the third quarter?",
+    "category": "Balance Sheet & Liquidity",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["cash and cash equivalents", "liquidity", "$2,150m"],
+    "ground_truth_answer": "Cash and cash equivalents totaled $2,150M at the end of Q3 2024."
+  },
+  {
+    "query_id": "FB-04",
+    "query": "What were the research and development (R&D) expenses as a percentage of total revenue in Q3 2024?",
+    "category": "Operating Expenses",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["research and development", "r&d", "14.2%"],
+    "ground_truth_answer": "Research and development expenses were $485M, accounting for 14.2% of total net revenue."
+  },
+  {
+    "query_id": "FB-05",
+    "query": "What was the effective tax rate applied in the third quarter financial results?",
+    "category": "Tax & Net Income",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["effective tax rate", "18.5%"],
+    "ground_truth_answer": "The effective tax rate for Q3 2024 was 18.5%, compared to 19.2% in the prior year period."
+  },
+  {
+    "query_id": "FB-06",
+    "query": "What total free cash flow was generated during the nine months ended September 30, 2024?",
+    "category": "Cash Flow Statement",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["free cash flow", "operating cash flow", "$1,410m"],
+    "ground_truth_answer": "Free cash flow for the nine-month period was $1,410M, after deducting capital expenditures of $620M from operating cash flows."
+  },
+  {
+    "query_id": "FB-07",
+    "query": "What was the diluted earnings per share (EPS) reported for the quarter ended September 30, 2024?",
+    "category": "Earnings Per Share",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["diluted earnings per share", "diluted eps", "$1.82"],
+    "ground_truth_answer": "Diluted earnings per share (EPS) was $1.82 in Q3 2024, up 17.4% from $1.55 in Q3 2023."
+  },
+  {
+    "query_id": "FB-08",
+    "query": "Which geographic segment contributed the largest dollar increase to overall revenue?",
+    "category": "Geographic Breakdown",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["north america", "geographic segment", "$1,980m"],
+    "ground_truth_answer": "North America contributed the largest absolute dollar increase, expanding by $295M to $1,980M."
+  },
+  {
+    "query_id": "FB-09",
+    "query": "What was the total outstanding long-term debt and the weighted average interest rate?",
+    "category": "Debt & Capital Structure",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["long-term debt", "senior notes", "4.35%"],
+    "ground_truth_answer": "Total long-term debt outstanding was $3,200M with a weighted average coupon rate of 4.35%."
+  },
+  {
+    "query_id": "FB-10",
+    "query": "What gross margin was achieved by the Software & SaaS business line in Table 4?",
+    "category": "Gross Margin & Cost of Revenue",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["software & saas", "gross margin", "76.8%"],
+    "ground_truth_answer": "The Software & SaaS business line delivered a 76.8% gross margin in Table 4."
+  },
+  {
+    "query_id": "FB-11",
+    "query": "What were the total restructuring and severance charges recorded in operating expenses?",
+    "category": "Non-Recurring Items",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["restructuring charges", "severance", "$35m"],
+    "ground_truth_answer": "Restructuring and severance charges recorded were $35M, associated with data center consolidation."
+  },
+  {
+    "query_id": "FB-12",
+    "query": "What was the depreciation and amortization expense for the quarter in Note 5?",
+    "category": "Non-Cash Adjustments",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["depreciation and amortization", "d&a", "$164m"],
+    "ground_truth_answer": "Depreciation and amortization expense was $164M in Note 5."
+  },
+  {
+    "query_id": "FB-13",
+    "query": "What was the dollar value of share repurchases executed under the authorized share buyback program?",
+    "category": "Capital Allocation",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["share repurchases", "buyback", "$300m"],
+    "ground_truth_answer": "The company repurchased $300M of common stock under the board-approved share buyback program."
+  },
+  {
+    "query_id": "FB-14",
+    "query": "What is the minimum uptime commitment specified in Section 4.1 of the Enterprise SLA Agreement?",
+    "category": "Contractual Commitments",
+    "target_document": "Enterprise_Cloud_Procurement_SLA.pdf",
+    "gold_chunk_keywords": ["service level commitment", "99.95%", "uptime"],
+    "ground_truth_answer": "Section 4.1 specifies a guaranteed monthly uptime commitment of 99.95% excluding scheduled maintenance windows."
+  },
+  {
+    "query_id": "FB-15",
+    "query": "What service credit percentage is issued if monthly service availability falls below 99.0%?",
+    "category": "SLA Penalties",
+    "target_document": "Enterprise_Cloud_Procurement_SLA.pdf",
+    "gold_chunk_keywords": ["service credit", "25%", "below 99.0%"],
+    "ground_truth_answer": "A 25% service credit is issued against that month's billing if availability falls below 99.0%."
+  },
+  {
+    "query_id": "FB-16",
+    "query": "What maximum recovery time objective (RTO) is guaranteed for critical Tier-1 services in the SLA?",
+    "category": "Disaster Recovery",
+    "target_document": "Enterprise_Cloud_Procurement_SLA.pdf",
+    "gold_chunk_keywords": ["recovery time objective", "rto", "15 minutes"],
+    "ground_truth_answer": "The guaranteed RTO for Tier-1 services is 15 minutes, with a Recovery Point Objective (RPO) of 0 minutes."
+  },
+  {
+    "query_id": "FB-17",
+    "query": "What is the strategic TAM growth projection cited in slide 5 of the Executive Strategy Deck?",
+    "category": "Market Sizing",
+    "target_document": "Executive_Strategy_Deck.pdf",
+    "gold_chunk_keywords": ["total addressable market", "tam", "$85b by 2027"],
+    "ground_truth_answer": "Slide 5 projects the total addressable market (TAM) expanding to $85B by 2027 with an 18.5% CAGR."
+  },
+  {
+    "query_id": "FB-18",
+    "query": "Which primary competitive moat is highlighted for enterprise AI workloads in the executive deck?",
+    "category": "Strategic Differentiation",
+    "target_document": "Executive_Strategy_Deck.pdf",
+    "gold_chunk_keywords": ["proprietary data integrations", "zero-retention guarantee", "competitive moat"],
+    "ground_truth_answer": "The strategy deck cites proprietary data integrations and zero-retention enterprise privacy guarantees as the primary moat."
+  },
+  {
+    "query_id": "FB-19",
+    "query": "What audit opinion was rendered by the independent auditor in the Compliance Certification?",
+    "category": "Compliance & Audit",
+    "target_document": "Scanned_Compliance_Audit_Cert.pdf",
+    "gold_chunk_keywords": ["unqualified opinion", "soc 2 type ii", "no material deficiencies"],
+    "ground_truth_answer": "The auditor issued an unqualified (clean) SOC 2 Type II compliance opinion with no material deficiencies noted."
+  },
+  {
+    "query_id": "FB-20",
+    "query": "What date range was covered by the external security and compliance certification audit?",
+    "category": "Audit Scope",
+    "target_document": "Scanned_Compliance_Audit_Cert.pdf",
+    "gold_chunk_keywords": ["audit period", "october 1, 2023", "september 30, 2024"],
+    "ground_truth_answer": "The audit covered the 12-month evaluation period from October 1, 2023 through September 30, 2024."
+  }
+]

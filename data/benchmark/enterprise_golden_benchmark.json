@@ -1,0 +1,98 @@
+[
+  {
+    "query_id": "FIN-01",
+    "query": "What was the Q3 Cloud Division operating margin percentage in 2024?",
+    "category": "Tabular / Financial",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["cloud division", "operating margin", "28.4%"],
+    "ground_truth_answer": "The Cloud Division operating margin in Q3 2024 was 28.4%, up 210 bps year-over-year from 26.3% in Q3 2023."
+  },
+  {
+    "query_id": "FIN-02",
+    "query": "What is the total capital expenditure allocated for Data Center Expansion in Table 3?",
+    "category": "Tabular / Financial",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["data center expansion", "capex", "$420m"],
+    "ground_truth_answer": "$420M was allocated for Data Center Expansion in Table 3 of the financial report."
+  },
+  {
+    "query_id": "FIN-03",
+    "query": "Which division experienced negative year-over-year revenue growth in Table 2?",
+    "category": "Tabular / Financial",
+    "target_document": "Q3_Global_Enterprise_Financial_Report.pdf",
+    "gold_chunk_keywords": ["legacy enterprise hardware", "-4.2%"],
+    "ground_truth_answer": "Legacy Enterprise Hardware experienced negative YoY revenue growth of -4.2% ($810M vs $845M)."
+  },
+  {
+    "query_id": "EML-01",
+    "query": "What root cause was identified for the P1 outage in thread INC-7721-P1?",
+    "category": "Email Thread & Action Items",
+    "target_document": "Incident_WarRoom_P1_Outage.eml",
+    "gold_chunk_keywords": ["inc-7721-p1", "db connection pool exhaustion", "kafka consumer lag"],
+    "ground_truth_answer": "The primary root cause was DB connection pool exhaustion triggered by unindexed queries in release v4.12.0 causing Kafka consumer lag."
+  },
+  {
+    "query_id": "EML-02",
+    "query": "Who was assigned ownership of hotfix HF-8842 and what was the deployment deadline?",
+    "category": "Email Thread & Action Items",
+    "target_document": "Incident_WarRoom_P1_Outage.eml",
+    "gold_chunk_keywords": ["sarah chen", "hf-8842", "04:30 utc"],
+    "ground_truth_answer": "Sarah Chen was assigned ownership of hotfix HF-8842 with a deployment target of 04:30 UTC."
+  },
+  {
+    "query_id": "EML-03",
+    "query": "Which payment gateway reported an elevated error rate during the incident?",
+    "category": "Email Thread & Action Items",
+    "target_document": "Incident_WarRoom_P1_Outage.eml",
+    "gold_chunk_keywords": ["stripe-apac", "504 gateway timeout"],
+    "ground_truth_answer": "The Stripe-APAC endpoint experienced a 12.8% error rate with 504 Gateway Timeouts."
+  },
+  {
+    "query_id": "JARGON-01",
+    "query": "What is the maximum allowed API latency under SLA metric SEC-LAT-99?",
+    "category": "Jargon & Code Match",
+    "target_document": "Enterprise_Cloud_Procurement_SLA.pdf",
+    "gold_chunk_keywords": ["sec-lat-99", "120ms p99"],
+    "ground_truth_answer": "Under SLA metric SEC-LAT-99, the maximum permitted latency is 120ms at p99 over any continuous 15-minute window."
+  },
+  {
+    "query_id": "JARGON-02",
+    "query": "What penalty multiplier applies if availability falls below 99.5% under Clause 8.2?",
+    "category": "Jargon & Code Match",
+    "target_document": "Enterprise_Cloud_Procurement_SLA.pdf",
+    "gold_chunk_keywords": ["clause 8.2", "penalty multiplier", "2.5x service credit"],
+    "ground_truth_answer": "Under Clause 8.2, a 2.5x service credit multiplier applies to the monthly billing cycle if uptime falls below 99.5%."
+  },
+  {
+    "query_id": "JARGON-03",
+    "query": "Which encryption cipher is mandated for data at rest under security standard CIPHER-AES-GCM-256?",
+    "category": "Jargon & Code Match",
+    "target_document": "Enterprise_Cloud_Procurement_SLA.pdf",
+    "gold_chunk_keywords": ["cipher-aes-gcm-256", "fips 140-3"],
+    "ground_truth_answer": "CIPHER-AES-GCM-256 mandates AES-256 in Galois/Counter Mode with FIPS 140-3 validated key rotation every 90 days."
+  },
+  {
+    "query_id": "STRAT-01",
+    "query": "What are the three pillars of Project Apollo's modernization roadmap?",
+    "category": "Executive Strategy Slides",
+    "target_document": "Executive_Strategy_Deck.pptx",
+    "gold_chunk_keywords": ["project apollo", "cloud migration", "ai copilot integration", "zero-trust security"],
+    "ground_truth_answer": "The three pillars are: (1) Core Cloud Migration, (2) Enterprise AI Copilot Integration, and (3) Zero-Trust Security Perimeter."
+  },
+  {
+    "query_id": "STRAT-02",
+    "query": "What projected cost savings were estimated for Year 2 in slide 7?",
+    "category": "Executive Strategy Slides",
+    "target_document": "Executive_Strategy_Deck.pptx",
+    "gold_chunk_keywords": ["$14.8m", "year 2", "infrastructure consolidation"],
+    "ground_truth_answer": "Year 2 projected cost savings are estimated at $14.8M through infrastructure consolidation and automated data tiering."
+  },
+  {
+    "query_id": "SCAN-01",
+    "query": "What was the auditor approval signature code on the scanned compliance certification?",
+    "category": "Scanned & OCR Ingestion",
+    "target_document": "Scanned_Compliance_Audit_Cert.pdf",
+    "gold_chunk_keywords": ["audit-cert-iso27001", "sig-verified-9932"],
+    "ground_truth_answer": "The auditor approval code is SIG-VERIFIED-9932 issued under ISO/IEC 27001:2022 Stage II certification."
+  }
+]

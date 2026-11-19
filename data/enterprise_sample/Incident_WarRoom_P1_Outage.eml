@@ -1,0 +1,38 @@
+From: alex.mercer@enterprise-infra.internal
+To: warroom-incidents@enterprise-infra.internal, cto-office@enterprise.com
+Subject: [P1 POST-MORTEM & RESOLUTION] INC-7721-P1 - Production API Outage and Payment Gateway Latency
+Date: Wed, 16 Oct 2024 07:15:22 +0000
+Message-ID: <inc-7721-p1-postmortem@enterprise-infra.internal>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+WAR ROOM INCIDENT FINAL SUMMARY REPORT
+Incident Identifier: INC-7721-P1
+Severity Level: P1 - Critical Production Outage
+Service Impact: Global Checkout & API Gateway (APAC & EU Clusters)
+Duration: 84 Minutes (02:45 UTC to 04:09 UTC)
+
+1. EXECUTIVE SUMMARY & TIMELINE
+At 02:45 UTC, automated alerts triggered on metric ALERT-ERR-504 across our Kubernetes ingress clusters in cluster region ap-southeast-1. 
+The Stripe-APAC payment gateway reported a 12.8% error rate with 504 Gateway Timeouts affecting 14,200 active checkout sessions.
+
+2. ROOT CAUSE ANALYSIS (RCA)
+The primary root cause was DB connection pool exhaustion in the user-authentication service, triggered by unindexed queries introduced in release v4.12.0. 
+This rapidly precipitated severe Kafka consumer lag on partition topic `payment-events-v2` (lag peaked at 240,000 unconsumed records).
+
+3. MITIGATION ACTIONS & RESOLUTION
+- 03:20 UTC: Traffic routed away from degraded node pools via Cloudflare traffic steering.
+- 03:45 UTC: Hotfix HF-8842 engineered by Sarah Chen to roll back the offending schema index migration.
+- 04:30 UTC: Sarah Chen deployed hotfix HF-8842 to production clusters. Connection pool utilization normalized from 99.8% down to 14.2%.
+- 05:00 UTC: Verification complete. All APAC and EU gateways operational with p99 latency < 65ms.
+
+4. ACTION ITEMS & PREVENTATIVE CONTROLS
+| Action Item ID | Description | Owner | Target Date | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| ACT-01 | Implement automated query explain plan checks in CI pipeline | Sarah Chen | 2024-10-25 | IN_PROGRESS |
+| ACT-02 | Scale PgBouncer pool max connections from 400 to 1,200 | David Kim | 2024-10-18 | COMPLETED |
+| ACT-03 | Add synthetic latency probes for Stripe-APAC and Adyen | Maria Silva | 2024-10-22 | IN_PROGRESS |
+
+Sign-off:
+Alex Mercer - VP Platform Engineering
+Incident Commander, War Room Taskforce
