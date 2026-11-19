@@ -79,11 +79,14 @@ def fetch_groq_models(api_key: str) -> List[str]:
 class MockEnterpriseLLM:
     """Intelligent fallback for demonstration when no external API key is configured."""
 
+    def __init__(self, provider_name: str = "Groq, Gemini, or watsonx"):
+        self.provider_name = provider_name
+
     def invoke(self, messages: List[BaseMessage]) -> AIMessage:
         prompt_text = messages[-1].content if messages else ""
         return AIMessage(
             content=(
-                "**[Demo Mode Response - Provide a Groq or Gemini API Key in the sidebar for full LLM reasoning]**\n\n"
+                f"**[Demo Mode Response - Provide a {self.provider_name} API Key in the sidebar or .env for live generation]**\n\n"
                 f"**Query Received:**\n> {prompt_text}\n\n"
                 "**Context Retrieved from Enterprise Documents:**\n"
                 "The hybrid retrieval engine successfully surfaced top matching passages and table cells. "
@@ -155,7 +158,7 @@ class EnterpriseRAGEngine:
             gemini_key = self.settings.api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY", "")
             if not gemini_key:
                 logger.warning("Gemini API key not found. Using Mock fallback.")
-                return MockEducationalLLM()
+                return MockEnterpriseLLM(provider_name="Google Gemini")
             try:
                 from langchain_google_genai import ChatGoogleGenerativeAI
                 return ChatGoogleGenerativeAI(
@@ -166,7 +169,50 @@ class EnterpriseRAGEngine:
                 )
             except Exception as e:
                 logger.error(f"Failed to initialize ChatGoogleGenerativeAI: {e}")
-                return MockEducationalLLM()
+                return MockEnterpriseLLM(provider_name="Google Gemini")
+
+        # 3. IBM watsonx (Granite)
+        elif "watsonx" in provider.lower() or "granite" in provider.lower():
+            watsonx_key = (self.settings.api_key or os.getenv("WATSONX_APIKEY", "")).strip()
+            project_id = (getattr(self.settings, "watsonx_project_id", "") or os.getenv("WATSONX_PROJECT_ID", "")).strip()
+            url = (getattr(self.settings, "watsonx_url", "") or os.getenv("WATSONX_URL", "https://us-south.ml.cloud.ibm.com")).strip()
+
+            if not watsonx_key or not project_id:
+                logger.warning("IBM watsonx credentials (WATSONX_APIKEY / WATSONX_PROJECT_ID) not found. Using Mock fallback.")
+                return MockEnterpriseLLM(provider_name="IBM watsonx Granite")
+
+            try:
+                from langchain_ibm import ChatWatsonx
+                return ChatWatsonx(
+                    model_id=self.settings.llm_model or "ibm/granite-3-8b-instruct",
+                    url=url,
+                    apikey=watsonx_key,
+                    project_id=project_id,
+                    params={
+                        "temperature": self.settings.temperature,
+                        "max_new_tokens": 2048
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"langchain_ibm ChatWatsonx failed ({e}). Checking direct watsonx SDK client.")
+                try:
+                    from ibm_watsonx_ai.foundation_models import ModelInference
+                    class WatsonxDirectWrapper:
+                        def __init__(self, key, pid, endpoint, mid, temp):
+                            self.client = ModelInference(
+                                model_id=mid,
+                                credentials={"url": endpoint, "apikey": key},
+                                project_id=pid,
+                                params={"temperature": temp, "max_new_tokens": 2048}
+                            )
+                        def invoke(self, messages):
+                            p = messages[-1].content if messages else ""
+                            resp = self.client.generate_text(prompt=p)
+                            return AIMessage(content=resp)
+                    return WatsonxDirectWrapper(watsonx_key, project_id, url, self.settings.llm_model, self.settings.temperature)
+                except Exception as inner_e:
+                    logger.error(f"Failed direct watsonx generation: {inner_e}")
+                    return MockEnterpriseLLM(provider_name="IBM watsonx Granite")
 
         return MockEducationalLLM()
 
@@ -197,13 +243,19 @@ class EnterpriseRAGEngine:
 
             raise e
 
-    def format_retrieved_context(self, retrieved_docs: List[Tuple[Document, float]]) -> str:
+    def format_retrieved_context(self, retrieved_docs: List[Any]) -> str:
         """Format retrieved chunks into a clean context string with citations."""
         if not retrieved_docs:
             return "No relevant enterprise context found."
 
         context_blocks = []
-        for idx, (doc, score) in enumerate(retrieved_docs, start=1):
+        for idx, item in enumerate(retrieved_docs, start=1):
+            if isinstance(item, tuple):
+                doc, score = item
+            else:
+                doc = item
+                score = 1.0
+
             meta = doc.metadata
             doc_name = meta.get("doc_name", "Enterprise Document")
             sec_title = meta.get("section_title", f"Page {meta.get('page', 1)}")
@@ -213,6 +265,14 @@ class EnterpriseRAGEngine:
             context_blocks.append(block)
 
         return "\n\n".join(context_blocks)
+
+    def _format_context(self, docs: List[Any]) -> str:
+        """Convenience alias for test and helper scripts."""
+        return self.format_retrieved_context(docs)
+
+    def answer(self, query: str, **kwargs) -> Dict[str, Any]:
+        """Convenience alias for answer_query."""
+        return self.answer_query(query, **kwargs)
 
     def answer_query(
         self,
@@ -302,6 +362,7 @@ class EnterpriseRAGEngine:
         return {
             "answer": answer_text,
             "sources": sources_summary,
+            "retrieved_sources": sources_summary,
             "context": formatted_context,
             "faithfulness": faithfulness_res,
             "retrieval_latency_ms": retrieval_latency_ms,

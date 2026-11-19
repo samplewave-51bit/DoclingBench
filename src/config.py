@@ -21,6 +21,8 @@ SAMPLE_DIR.mkdir(exist_ok=True)
 AVAILABLE_EMBEDDING_MODELS = [
     "all-MiniLM-L6-v2",
     "BAAI/bge-small-en-v1.5",
+    "ibm-granite/granite-embedding-125m-english",
+    "ibm-granite/granite-embedding-30m-english",
 ]
 
 AVAILABLE_CHUNKING_STRATEGIES = [
@@ -35,7 +37,7 @@ RETRIEVAL_MODES = [
     "sparse_only",            # Pure BM25 Keyword Search
     "hybrid_rrf",             # Reciprocal Rank Fusion (BM25 + Dense)
     "hybrid_weighted",        # Linear Weighted Fusion (alpha * Dense + (1-alpha) * BM25)
-    "hybrid_rrf_reranked"     # Hybrid RRF + Cross-Encoder Reranker (State of the Art)
+    "hybrid_rrf_reranked"     # Hybrid RRF + Cross-Encoder Reranker
 ]
 
 DEFAULT_RERANKER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
@@ -50,8 +52,23 @@ MIN_TEXT_CHARS_FOR_OCR = 40  # Trigger OCR if page text length is below this
 RRF_K_CONSTANT = 60
 DEFAULT_HYBRID_ALPHA = 0.6  # 0.6 Dense, 0.4 Sparse BM25
 
+# Evaluation Benchmark Datasets
+BENCHMARK_DATASETS = {
+    "poc_enterprise": "Enterprise PoC Golden Set (12 queries)",
+    "financebench": "FinanceBench Evaluation Slice (20 queries)",
+    "combined": "Combined Multi-Modal Suite (32 queries)"
+}
+POC_BENCHMARK_PATH = BENCHMARK_DATA_DIR / "enterprise_golden_benchmark.json"
+FINANCEBENCH_SLICE_PATH = BENCHMARK_DATA_DIR / "financebench_eval_slice.json"
+
 # Evaluation & LLM Provider settings
-SUPPORTED_LLM_PROVIDERS = ["Groq (LLaMA-3)", "Google Gemini", "Local Mock"]
+SUPPORTED_LLM_PROVIDERS = [
+    "Groq (LLaMA-3)",
+    "Google Gemini",
+    "IBM watsonx (Granite)",
+    "Local Mock"
+]
+
 GROQ_MODELS = [
     "llama-3.1-8b-instant",
     "llama-3.3-70b-versatile",
@@ -67,10 +84,20 @@ GEMINI_MODELS = [
     "gemini-1.5-pro"
 ]
 
+WATSONX_MODELS = [
+    "ibm/granite-3-8b-instruct",
+    "ibm/granite-3-2b-instruct",
+    "ibm/granite-13b-chat-v2",
+    "ibm/granite-20b-multilingual"
+]
+DEFAULT_WATSONX_MODEL = "ibm/granite-3-8b-instruct"
+DEFAULT_WATSONX_URL = "https://us-south.ml.cloud.ibm.com"
+
 @dataclass
 class BenchmarkPipelineConfig:
     """Configures one specific permutation in the retrieval benchmark."""
     name: str = "Hybrid_RRF_Docling"
+    parser_type: str = "docling"           # "docling" or "naive_pymupdf"
     chunking_strategy: str = "docling_structural"
     embedding_model: str = DEFAULT_EMBEDDING_MODEL
     retrieval_mode: str = "hybrid_rrf_reranked"
@@ -83,8 +110,9 @@ class BenchmarkPipelineConfig:
     llm_provider: str = "Groq (LLaMA-3)"
     llm_model: str = "llama-3.1-8b-instant"
     api_key: str = ""
+    watsonx_project_id: str = ""
+    watsonx_url: str = DEFAULT_WATSONX_URL
     temperature: float = 0.2
 
 # Backward compatibility alias
 RAGSettings = BenchmarkPipelineConfig
-

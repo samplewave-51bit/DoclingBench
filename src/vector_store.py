@@ -25,12 +25,27 @@ logger = logging.getLogger(__name__)
 # Global singleton cache for embedding models to prevent reloading weights on Streamlit reruns
 _MODEL_CACHE: Dict[Tuple[str, str], SentenceTransformer] = {}
 
+MODEL_NAME_ALIASES = {
+    "granite": "ibm-granite/granite-embedding-125m-english",
+    "ibm-granite": "ibm-granite/granite-embedding-125m-english",
+    "granite-125m": "ibm-granite/granite-embedding-125m-english",
+    "granite-30m": "ibm-granite/granite-embedding-30m-english",
+    "minilm": "all-MiniLM-L6-v2",
+    "bge-small": "BAAI/bge-small-en-v1.5"
+}
+
+def resolve_model_name(name: str) -> str:
+    """Normalize model identifier or alias."""
+    clean = name.strip()
+    return MODEL_NAME_ALIASES.get(clean.lower(), clean)
+
 def get_cached_sentence_transformer(model_name: str, device: str = "cpu") -> SentenceTransformer:
     """Retrieve or load a cached SentenceTransformer instance with progress bars disabled."""
-    key = (model_name, device)
+    canonical_name = resolve_model_name(model_name)
+    key = (canonical_name, device)
     if key not in _MODEL_CACHE:
-        logger.info(f"Loading SentenceTransformer '{model_name}' on {device} into memory cache...")
-        _MODEL_CACHE[key] = SentenceTransformer(model_name, device=device)
+        logger.info(f"Loading SentenceTransformer '{canonical_name}' on {device} into memory cache...")
+        _MODEL_CACHE[key] = SentenceTransformer(canonical_name, device=device)
     return _MODEL_CACHE[key]
 
 
