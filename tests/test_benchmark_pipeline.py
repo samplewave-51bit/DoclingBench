@@ -1,6 +1,7 @@
 """Comprehensive tests for Enterprise Retrieval Benchmark, Ingestion, and Hybrid Retrieval."""
 import unittest
 import json
+import pytest
 from pathlib import Path
 
 from src.ingestion.multimodal_parser import EnterpriseDocumentParser
@@ -12,6 +13,8 @@ from src.evaluation.faithfulness import FaithfulnessEvaluator
 from src.evaluation.failure_analysis import FailureAnalyzer
 from src.config import BENCHMARK_DATA_DIR, ENTERPRISE_SAMPLE_DIR
 
+@pytest.mark.integration
+@pytest.mark.slow
 class TestEnterpriseRetrievalBenchmark(unittest.TestCase):
 
     @classmethod

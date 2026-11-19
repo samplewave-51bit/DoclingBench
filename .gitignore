@@ -10,11 +10,19 @@ __pycache__/
 *$py.class
 *.so
 .pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
 
-# Local configuration
+# Local configuration & secrets
 .env
-data/
+.env.local
+
+# Generated indices and cache (DO NOT ignore sample and benchmark data)
 vector_indices/
+data/cache/
+data/uploads/
+data/temp/
 
 # Streamlit
 .streamlit/
