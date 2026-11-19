@@ -23,6 +23,17 @@ class FaithfulnessEvaluator:
     def __init__(self, llm_engine=None):
         self.llm_engine = llm_engine
 
+    def extract_claims(self, text: str) -> List[str]:
+        """Decompose an answer into individual proposition sentences."""
+        if not text:
+            return []
+        sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text) if len(s.strip()) > 10]
+        return sentences if sentences else [text.strip()]
+
+    def _extract_claims_heuristic(self, text: str) -> List[str]:
+        """Backward-compatible alias for heuristic claim extraction."""
+        return self.extract_claims(text)
+
     def evaluate(self, query: str, context: str, answer: str) -> FaithfulnessResult:
         """Evaluate answer faithfulness and relevance against the retrieved context."""
         if not answer or not context:

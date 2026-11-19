@@ -64,6 +64,10 @@ class MultiStrategyChunker:
             table_pattern = re.compile(r'(\|.+?\|\n\|[-:| ]+\|\n(?:\|.+?\|\n?)+)', re.MULTILINE)
             tables = table_pattern.findall(text)
             
+            # Helper to detect markdown table
+            def has_table(s: str) -> bool:
+                return bool(re.search(r'\|[\s:]*-{2,}[\s:]*\|', s)) or "|---" in s
+
             # Split sections by markdown headers (##, ###) or double newlines
             sections = re.split(r'\n(?=#{1,4}\s)', text)
             
@@ -77,15 +81,16 @@ class MultiStrategyChunker:
                 section_title = first_line.replace('#', '').strip() if first_line.startswith('#') else f"Page {page_num}"
 
                 header_prefix = f"[{doc_name} | {section_title}]\n"
+                sec_is_table = has_table(sec_text)
 
                 # If section fits within chunk limit or is a table, keep whole
-                if len(sec_text) <= self.chunk_size * 1.5 or "|---" in sec_text:
+                if len(sec_text) <= self.chunk_size * 1.5 or sec_is_table:
                     counter += 1
                     meta = doc.metadata.copy()
                     meta["chunk_id"] = f"{doc_name}_struct_{counter}"
                     meta["chunking_strategy"] = "docling_structural"
                     meta["section_title"] = section_title
-                    meta["is_table"] = "|---" in sec_text
+                    meta["is_table"] = sec_is_table
                     chunked.append(Document(page_content=f"{header_prefix}{sec_text}", metadata=meta))
                 else:
                     # Split while trying to avoid breaking tables
@@ -96,7 +101,7 @@ class MultiStrategyChunker:
                         meta["chunk_id"] = f"{doc_name}_struct_{counter}"
                         meta["chunking_strategy"] = "docling_structural"
                         meta["section_title"] = section_title
-                        meta["is_table"] = "|---" in sub_t
+                        meta["is_table"] = has_table(sub_t)
                         chunked.append(Document(page_content=f"{header_prefix}{sub_t}", metadata=meta))
 
         return chunked

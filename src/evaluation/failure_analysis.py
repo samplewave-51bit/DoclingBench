@@ -27,9 +27,30 @@ class FailureCase:
     ground_truth_answer: str
     suggested_remedy: str
 
+    @property
+    def root_cause_category(self) -> str:
+        return self.failure_type
+
+
+@dataclass
+class FailureReport:
+    total_failures: int
+    failure_cases: List[FailureCase]
+
+    def __iter__(self):
+        return iter(self.failure_cases)
+
+    def __len__(self):
+        return len(self.failure_cases)
+
 
 class FailureAnalyzer:
     """Diagnoses failure modes across benchmark runs and generates actionable reports."""
+
+    def analyze(self, summary: PipelineBenchmarkSummary, raw_documents: List[Any] = None) -> FailureReport:
+        """Alias returning a structured FailureReport."""
+        cases = self.analyze_pipeline_failures(summary, raw_documents)
+        return FailureReport(total_failures=len(cases), failure_cases=cases)
 
     def analyze_pipeline_failures(
         self,

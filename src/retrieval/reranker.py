@@ -26,18 +26,28 @@ class CrossEncoderReranker:
                 _RERANKER_CACHE[self.model_name] = None
         return _RERANKER_CACHE[self.model_name]
 
-    def rerank(self, query: str, candidates: List[Document], top_k: int = 5) -> List[Tuple[Document, float]]:
+    def rerank(
+        self,
+        query: str,
+        candidates: Optional[List[Any]] = None,
+        top_k: int = 5,
+        candidate_docs: Optional[List[Any]] = None
+    ) -> List[Tuple[Document, float]]:
         """Score (query, chunk) pairs and return top_k reranked results."""
-        if not candidates:
+        raw_list = candidates if candidates is not None else (candidate_docs or [])
+        if not raw_list:
             return []
+
+        # Automatically unpack if (Document, score) tuples were passed
+        clean_docs: List[Document] = [item[0] if isinstance(item, tuple) else item for item in raw_list]
 
         model = self._get_model()
         if model is not None:
             try:
-                pairs = [[query, doc.page_content] for doc in candidates]
+                pairs = [[query, doc.page_content] for doc in clean_docs]
                 scores = model.predict(pairs)
                 # Sort descending
-                ranked_pairs = sorted(zip(candidates, scores), key=lambda x: x[1], reverse=True)
+                ranked_pairs = sorted(zip(clean_docs, scores), key=lambda x: x[1], reverse=True)
                 return [(doc, float(score)) for doc, score in ranked_pairs[:top_k]]
             except Exception as e:
                 logger.error(f"Error during cross-encoder prediction: {e}")
@@ -45,7 +55,7 @@ class CrossEncoderReranker:
         # Fallback heuristic: exact keyword overlap + length normalization
         query_words = set(query.lower().split())
         scored = []
-        for doc in candidates:
+        for doc in clean_docs:
             doc_words = set(doc.page_content.lower().split())
             overlap = len(query_words.intersection(doc_words)) / max(len(query_words), 1)
             scored.append((doc, float(overlap)))

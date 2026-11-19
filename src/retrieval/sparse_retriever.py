@@ -65,3 +65,8 @@ class BM25Retriever:
             if score > 0:
                 results.append((self.documents[idx], score))
         return results
+
+
+# Backward compatibility & descriptive alias
+BM25SparseRetriever = BM25Retriever
+
