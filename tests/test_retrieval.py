@@ -53,7 +53,7 @@ class TestRetrievalEngine:
 
     def test_cross_encoder_reranking_fallback(self, sample_documents):
         """Verify cross-encoder reranks or gracefully falls back on candidate pools."""
-        reranker = CrossEncoderReranker()
+        reranker = CrossEncoderReranker(model_name="mock_fallback_model")
         candidates = [(doc, 0.5) for doc in sample_documents]
         reranked = reranker.rerank(query="Incident hotfix HF-8842", candidate_docs=candidates, top_k=2)
         assert len(reranked) == 2
